@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Session;
+use App;
 
-class LocatizationMiddleware
+class LocalizationMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +17,11 @@ class LocatizationMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $language = Session::get('lang', config('app.locate'));
+        App::setLocale($language);
+
         return $next($request);
     }
+
 }
+

@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'admin', 'middleware' => 'localization'], function () {
+    Route::get('/change-language/{lang}', 'LocalizationController@index')->name('change-language');
+    Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
+       Route::resource('/', 'PostController');
+    });
+    Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+       Route::resource('/', 'UserController');
+    });
+});
