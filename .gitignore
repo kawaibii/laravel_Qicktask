@@ -4,6 +4,10 @@
 /storage/*.key
 /vendor
 /.idea
+/public/bootstrap
+/public/bower_components
+.bowerrc
+bower.json
 .env
 .env.backup
 .phpunit.result.cache

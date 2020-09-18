@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Post;
 
-class PostController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts =  Post::all();
 
-        return view('admins.blogs.index', compact('posts'));
     }
 
     /**
@@ -82,6 +79,6 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-
+        
     }
 }
