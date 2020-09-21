@@ -22,7 +22,7 @@
         </a>
     </li>
     <li class="nav-item active">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('users.index') }}">
             <i class="fas fa-fw fa-table"></i>
             <span>{{ trans ('message.user') }}</span>
         </a>
