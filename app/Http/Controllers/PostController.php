@@ -3,85 +3,100 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Post;
+use App\Models\Post;
+use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $posts =  Post::all();
-
         return view('admins.blogs.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-
+        return view('admins.blogs.create_blog');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
+        try {
+            $post = new Post();
+            $post->title = $request->title;
+            $post->body = $request->body;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $name = time() . $file->getClientOriginalName();
+                $path = public_path(config('image.imagePost'));
+                $file->move($path, $name);
+                $post->image = $name;
+            } else {
+                $post->image = config('image.default');
+            }
+            $post->user_id = 1;
+            $post->save();
 
+            return redirect()->route('posts.index')->with('Message_success', trans('validator.message_success'));
+        } catch (Exception $e) {
+            return redirect()->route('posts.index')->with('Message_errors', trans('validator.message_error'));
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        try {
+            $post = Post::findOrFail($id);
 
+            return view('admins.blogs.edit_blog', compact('post'));
+        } catch (Exception $ex) {
+            return redirect()->back()->with('Message_errors', trans('validator.message_error'));
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
+        try {
+            $post = Post::findOrFail($id);
+            $post->title = $request->title;
+            $post->body = $request->body;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                if (file_exists(config('image.imagePost') . $post->image)) {
+                    unlink(config('image.imagePost') . $post->image);
+                }
+                $name = time() . $file->getClientOriginalName();
+                $file->move(config('image.imagePost'), $name);
+                $post->image = $name;
+            }
+            $post->save();
 
+            return redirect()->route('posts.index')->with('Message_success', trans('validator.message_success'));
+        } catch (Exception $exception) {
+            return redirect()->back()->with('Message_errors', trans('validator.message_error'));
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
+        try {
+            $post = Post::findOrFail($id);
+            if (file_exists(config('image.imagePost' . $post->image))) {
+                unlink(config('image.image.Post' . $post->image));
+            }
+            $post->delete();
 
+            return redirect()->route('posts.index')->with('Message_success', trans('validator.message_success'));
+        } catch (Exception $ex) {
+            return redirect()->back()->with('Message_errors', trans('validator.message_error'));
+        }
     }
+
 }

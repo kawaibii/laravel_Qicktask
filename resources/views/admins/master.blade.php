@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>{{ trans ('message.titlebrowser') }}</title>
+    <title>{{ trans('message.title_browser') }}</title>
     <base href="{{ asset('') }}">
     <link href="{{ asset('bootstrap/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('bower_components/css/css.css') }}" rel="stylesheet">
